@@ -25,18 +25,16 @@ require(
 			var m_DOMtra = new DOMtra();
 
 			// create a bunch of platforms
-			for(var i = 0; i < 26; i++) {
-				a = m_DOMtra.createActor('Actor', { x: i * 50, y: 410, height: 16, width: 16 })
+			for(var i = 0; i < 3; i++) {
+				a = m_DOMtra.createActor('PlatformActor', { x: (window.innerWidth / 2) * Math.random() + (window.innerWidth / 4) - 64, y: i * 250 + 100 })
 			}
-			
+
 			// make a little particle system that spawns new boxes
 			m_DOMtra.customUpdate = function() {
-				var minSize = 10;
-				var maxSize = 20;
-				var maxParticles = 100;
+				var maxParticles = 50;
 				if(this.actorManager.actors.length < maxParticles) {
-					this.createActor('Actor', { x: Math.random() * document.width, y: Math.random() * 100 * -1, height: Math.random() * maxSize + minSize, width: Math.random() * maxSize + minSize, dynamic: true, rotation: true })
-				}		
+					this.createActor('EnemyTurtleActor', { x: Math.random() * document.width, y: -50 })
+				}
 			}
 
 			m_DOMtra.start();

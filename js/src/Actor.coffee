@@ -14,9 +14,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 	b2DebugDraw = Box2D.Dynamics.b2DebugDraw
 	b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef
 
+	window.Box2D = Box2D
+
 	# special vars for actors
 	DRAW_SCALE = 32
-	myWorld = World.get()
 
 	class Actor
 
@@ -27,6 +28,8 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 			# receive our ID, and options from our constructor
 			@id = id
 			@options = options
+
+			@world = World.get()
 
 			# by default, we are alive
 			@alive = true
@@ -45,8 +48,16 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 			@x = if options.x == undefined then 0 else options.x
 			@y = if options.y == undefined then 0 else options.y
 
+			# setup default body settings
+			@density = if options.density == undefined then 1.0 else options.density
+			@friction = if options.friction == undefined then .5 else options.friction
+			@restitution = if options.restitution == undefined then .5 else options.restitution
+
 			# default to not assigning listeners for contact events
 			@listener = if options.listener == undefined then false else options.listener
+
+			# default class name for our elements
+			@className = if options.className == undefined then "domtraActor" else options.className
 
 			# run our setup function
 			@setup()
@@ -54,9 +65,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 		setup: () ->
 			# create a platform with some default settings
 			fixDef = new b2FixtureDef
-			fixDef.density = 1.0
-			fixDef.friction = 0.5
-			fixDef.restitution = 0.45
+			fixDef.density = @density
+			fixDef.friction = @friction
+			fixDef.restitution = @restitution
+			
 			fixDef.shape = new b2PolygonShape
 			fixDef.shape.SetAsBox((@width / 2) / DRAW_SCALE, (@height / 2) / DRAW_SCALE)
 
@@ -75,14 +87,14 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 			bodyDef.fixedRotation = !@rotation
 
 			# instantiate our body element, and add it to the world
-			@body = myWorld.createBody(bodyDef, fixDef)
+			@body = @world.createBody(bodyDef, fixDef)
 
 			# create a div and append it 
 			@el = document.createElement("div")
 			@el.setAttribute("id", @id)
 			@el.style.position = "absolute"
 			@el.style.opacity = 1
-			@el.className = "domtraActor"
+			@el.className = @className
 
 			# set our shape and position according to our body
 			@updateDomElement()
@@ -98,10 +110,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 
 		# receive a hit from another actor on the stage somewhere
 		hit: (actor) ->
-			@hitCount += 1
-			@el.style.opacity = Number(@el.style.opacity) - .05
-			if @hitCount > 19
-				@die()
+			return 1
 
 		updateDomElement: () -> 
 				@width = (@body.GetFixtureList().m_shape.m_vertices[1].x - @body.GetFixtureList().m_shape.m_vertices[0].x) * DRAW_SCALE 
@@ -131,7 +140,5 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 		update: () ->
 			if @body.IsAwake() != undefined
 				@updateDomPosition()
-				if @y > 500
-					@die()	
 
 	return Actor

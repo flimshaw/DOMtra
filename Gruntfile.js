@@ -52,6 +52,15 @@ module.exports = function(grunt) {
         }
       }
     },
+    requirejs: {
+      compile: {
+        options: {
+          baseUrl: "js/",
+          out: "build/optimized.js",
+          name: "main"
+        }
+      }
+    },
     jshint: {
       options: {
         curly: true,
@@ -115,6 +124,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-coffee');
+  grunt.loadNpmTasks('grunt-contrib-requirejs');
 
   // Default task.
   grunt.registerTask('default', ['coffee', 'concat', 'uglify']);

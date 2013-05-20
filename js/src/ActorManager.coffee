@@ -1,8 +1,11 @@
 define [
 	'vendor/underscore',
 	'bin/World',
-	'bin/Actor'
-	], (_, World, Actor) ->
+	'bin/Actor',
+	'bin/PlatformActor',
+	'bin/QuestionMarkActor',
+	'bin/EnemyTurtleActor'
+	], (_, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor) ->
 
 	class ActorManager
 
@@ -16,6 +19,9 @@ define [
 		actorFactory: (actorType, options) ->
 			switch(actorType)
 				when "Actor" then new Actor(@generateUID(), options)
+				when "PlatformActor" then new PlatformActor(@generateUID(), options)
+				when "QuestionMarkActor" then new QuestionMarkActor(@generateUID(), options)
+				when "EnemyTurtleActor" then new EnemyTurtleActor(@generateUID(), options)
 				else new Actor(@generateUID(), options)
 
 		# generate a guid for new actors
