@@ -8,6 +8,9 @@ require.config({
 		},
 		"vendor/Box2dWeb-2.1.a.3": {
 			exports: "Box2D"
+		},
+		"vendor/pixi.dev.js": {
+			exports: "PIXI"
 		}
 	}
 });
