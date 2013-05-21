@@ -1,27 +1,22 @@
-define ['vendor/Box2dWeb-2.1.a.3', 'bin/Actor'], (Box2D, Actor) ->
+define ['vendor/Box2dWeb-2.1.a.3', 'bin/ActorDOM'], (Box2D, ActorDOM) ->
 
-	class PlatformActor extends Actor
+	class PlatformActor extends ActorDOM
 
-		constructor: (id, options) ->
-			options.dynamic = true
-			options.rotation = true
-			options.width = 256
-			options.height = 32
-			
-			options.density = 3.8
-			options.friction = .2
-			options.restitution = .4
-
-			options.className = "platform"
-			super(id, options)
-
-		setup: () =>
+		preSetup: () ->
+			@className = 'platform'
+			@rotation = true
+			@dynamic = true
 			super
+
+		postSetup: () ->
 			jointDef = new Box2D.Dynamics.Joints.b2RevoluteJointDef()
 			jointDef.Initialize(@world.world.GetGroundBody(), @body, @body.GetWorldCenter())
 			@world.world.CreateJoint(jointDef)
+			@el.innerHTML = "I AM A DIV"
+			super
 
-		update: () =>
+		update: () ->
+			@el.innerHTML = @hitCount
 			super
 
 	return PlatformActor

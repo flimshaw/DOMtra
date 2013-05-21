@@ -53,14 +53,23 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 			@friction = if options.friction == undefined then .5 else options.friction
 			@restitution = if options.restitution == undefined then .5 else options.restitution
 
-			# default to not assigning listeners for contact events
-			@listener = if options.listener == undefined then false else options.listener
-
-			# default class name for our elements
-			@className = if options.className == undefined then "domtraActor" else options.className
+			# overidden by children classes
+			@preSetup()
 
 			# run our setup function
 			@setup()
+
+			# overidden by children classes
+			@postSetup()
+
+			# kickstart the update process
+			@update()
+
+		preSetup: () ->
+			return 1
+
+		postSetup: () ->
+			return
 
 		setup: () ->
 			# create a platform with some default settings
@@ -89,42 +98,16 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 			# instantiate our body element, and add it to the world
 			@body = @world.createBody(bodyDef, fixDef)
 
-			# create a div and append it 
-			@el = document.createElement("div")
-			@el.setAttribute("id", @id)
-			@el.style.position = "absolute"
-			@el.style.opacity = 1
-			@el.className = @className
-
-			# set our shape and position according to our body
-			@updateDomElement()
-
-			# append our element to the document body
-			document.body.appendChild(@el)
-
 			@hitCount = 0
 
-			# kickstart the update process
-			@update()
+
+		remove: () ->
+			return 1
 
 
 		# receive a hit from another actor on the stage somewhere
 		hit: (actor) ->
-			return 1
-
-		updateDomElement: () -> 
-				@width = (@body.GetFixtureList().m_shape.m_vertices[1].x - @body.GetFixtureList().m_shape.m_vertices[0].x) * DRAW_SCALE 
-				@height = (@body.GetFixtureList().m_shape.m_vertices[2].y - @body.GetFixtureList().m_shape.m_vertices[1].y) * DRAW_SCALE
-				@el.style.height = @height + "px"
-				@el.style.width = @width + "px"
-
-		updateDomPosition: () ->
-			@y = Math.floor((@body.GetPosition().y * DRAW_SCALE) - (@height / 2))
-			@x = Math.floor((@body.GetPosition().x * DRAW_SCALE) - (@width / 2));
-			angle = @body.GetAngle()
-			@el.style.top = @y + "px"
-			@el.style.left = @x + "px"
-			@el.style.WebkitTransform = "rotate(" + angle + "rad)"
+			@hitCount++
 
 		setPosition: (x, y) ->
 			@x = x
@@ -132,13 +115,13 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 			wX = (@x + (@width / 2)) / DRAW_SCALE
 			wY = (@y + (@height / 2)) / DRAW_SCALE
 			@body.SetPositionAndAngle(new b2Vec2(wX, wY))
-			@updateDomPosition()
 
 		die: () ->
 			@alive = false
 
+		# will almost certainly be overidden by child classes
 		update: () ->
 			if @body.IsAwake() != undefined
-				@updateDomPosition()
+				return 1
 
 	return Actor

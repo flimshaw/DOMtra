@@ -4,8 +4,10 @@ define [
 	'bin/Actor',
 	'bin/PlatformActor',
 	'bin/QuestionMarkActor',
-	'bin/EnemyTurtleActor'
-	], (_, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor) ->
+	'bin/EnemyTurtleActor',
+	'bin/ActorDOM',
+	'bin/ActorPixi'
+	], (_, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor, ActorDOM, ActorPixi) ->
 
 	class ActorManager
 
@@ -22,6 +24,8 @@ define [
 				when "PlatformActor" then new PlatformActor(@generateUID(), options)
 				when "QuestionMarkActor" then new QuestionMarkActor(@generateUID(), options)
 				when "EnemyTurtleActor" then new EnemyTurtleActor(@generateUID(), options)
+				when "ActorDOM" then new ActorDOM(@generateUID(), options)
+				when "ActorPixi" then new ActorPixi(@generateUID(), options)
 				else new Actor(@generateUID(), options)
 
 		# generate a guid for new actors
@@ -41,7 +45,7 @@ define [
 			if a then a else -1
 
 		deleteActor: (actor) ->
-			document.body.removeChild(actor.el)
+			actor.remove()
 			@world.removeBody(actor.body)	
 
 		# loop through all actors and update each one
