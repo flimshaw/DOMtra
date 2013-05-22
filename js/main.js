@@ -29,15 +29,15 @@ require(
 			var m_DOMtra = new DOMtra();
 
 			// create a bunch of platforms
-			for(var i = 0; i < 8; i++) {
-				a = m_DOMtra.createActor('PlatformActor', { width: 192, height: 32, x: (window.innerWidth * .8) * Math.random(), y: i * 100 + 100 })
+			for(var i = 0; i < 5; i++) {
+				a = m_DOMtra.createActor('PlatformActor', { width: 192, height: 32, x: (window.innerWidth * .9) * Math.random(), y: i * 100 + 300 })
 			}
 
 			m_DOMtra.customUpdate = function() {
 				var maxParticles = 2000;
 				if(this.actorManager.actors.length < maxParticles) {
-					for(var x = 0; x < 3; x++) {
-						m_DOMtra.createActor('ActorPixi', { width: 16, height: 16, x: window.innerWidth * Math.random(), y: -50 })
+					for(var x = 0; x < 1; x++) {
+						m_DOMtra.createActor('ActorPixiHero', { width: 34, height: 52, x: window.innerWidth * Math.random(), y: -80 })
 					}
 				}
 			}

@@ -7,7 +7,8 @@ define [
 	'bin/EnemyTurtleActor',
 	'bin/ActorDOM',
 	'bin/ActorPixi'
-	], (_, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor, ActorDOM, ActorPixi) ->
+	'bin/ActorPixiHero'
+	], (_, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor, ActorDOM, ActorPixi, ActorPixiHero) ->
 
 	class ActorManager
 
@@ -26,6 +27,7 @@ define [
 				when "EnemyTurtleActor" then new EnemyTurtleActor(@generateUID(), options)
 				when "ActorDOM" then new ActorDOM(@generateUID(), options)
 				when "ActorPixi" then new ActorPixi(@generateUID(), options)
+				when "ActorPixiHero" then new ActorPixiHero(@generateUID(), options)
 				else new Actor(@generateUID(), options)
 
 		# generate a guid for new actors

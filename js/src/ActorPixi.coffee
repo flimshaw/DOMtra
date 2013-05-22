@@ -12,7 +12,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/Actor'],
 			@rotation = true
 
 		postSetup: () ->
-			texture = PIXI.Texture.fromImage("/images/brick.gif")
+			texture = PIXI.Texture.fromImage("images/brick.gif")
 			@el = new PIXI.Sprite(texture)
 			@el.position.x = @x
 			@el.position.y = @y
