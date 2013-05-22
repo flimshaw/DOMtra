@@ -8,8 +8,9 @@ define [
 	'bin/EnemyTurtleActor',
 	'bin/ActorDOM',
 	'bin/ActorPixi'
-	'bin/ActorPixiHero'
-	], (_, EventDispatcher, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor, ActorDOM, ActorPixi, ActorPixiHero) ->
+	'bin/ActorPixiHero',
+	'bin/ActorPixiColumbo'
+	], (_, EventDispatcher, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor, ActorDOM, ActorPixi, ActorPixiHero, ActorPixiColumbo) ->
 
 	class Box2DActorManager extends EventDispatcher
 
@@ -30,6 +31,7 @@ define [
 				when "ActorDOM" then new ActorDOM(@generateUID(), options)
 				when "ActorPixi" then new ActorPixi(@generateUID(), options)
 				when "ActorPixiHero" then new ActorPixiHero(@generateUID(), options)
+				when "ActorPixiColumbo" then new ActorPixiColumbo(@generateUID(), options)
 				else new Actor(@generateUID(), options)
 
 		# generate a guid for new actors

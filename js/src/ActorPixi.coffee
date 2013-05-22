@@ -31,7 +31,5 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/Actor'],
 				@x = @el.position.x = (@body.GetPosition().x * DRAW_SCALE)
 				@y = @el.position.y = (@body.GetPosition().y * DRAW_SCALE)
 				@el.rotation = @body.GetAngle()
-				if @y > window.innerHeight
-					@die()
 
 	return ActorPixi
