@@ -35,6 +35,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@height = 128
 			@restitution = 0
 			@density = 1.5
+			@friction = 0
 
 			# custom vars
 			@jumpVector = 270
@@ -53,7 +54,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@el.anchor.y = .5
 			@el.width = @width
 			@el.height = @height
-			@world.stage.addChild(@el)
+			game.stage.addChild(@el)
 			@elReady = true
 
 		update: () ->
@@ -63,6 +64,8 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 				@body.SetLinearVelocity(new b2Vec2(@walkPower, lv.y))
 			else if @heroDirection == "left"
 				@body.SetLinearVelocity(new b2Vec2(-@walkPower, lv.y))
+			else
+				@body.SetLinearVelocity(new b2Vec2(-lv.x, lv.y))
 
 			super
 

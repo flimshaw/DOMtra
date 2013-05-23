@@ -11,6 +11,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@dynamic = true
 			@rotation = true
 			@restitution = .8
+			@density = 1
 
 		postSetup: () ->
 			texture = PIXI.Texture.fromImage("images/columbo2.png")
@@ -21,13 +22,13 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@el.anchor.y = .5
 			@el.width = @width
 			@el.height = @height
-			@world.stage.addChild(@el)
+			game.stage.addChild(@el)
 			@elReady = true
 
 		update: () ->
 			super
 			if @y > window.innerHeight
-					@die()
+				@die()
 
 
 	return ActorPixiColumbo

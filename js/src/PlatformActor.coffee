@@ -4,14 +4,14 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/ActorDOM'], (Box2D, ActorDOM) ->
 
 		preSetup: () ->
 			@className = 'platform'
-			@rotation = true
-			@dynamic = true
+			@rotation = false
+			@dynamic = false
 			super
 
 		postSetup: () ->
-			jointDef = new Box2D.Dynamics.Joints.b2RevoluteJointDef()
-			jointDef.Initialize(@world.world.GetGroundBody(), @body, @body.GetWorldCenter())
-			@world.world.CreateJoint(jointDef)
+			#jointDef = new Box2D.Dynamics.Joints.b2RevoluteJointDef()
+			#jointDef.Initialize(game.world.GetGroundBody(), @body, @body.GetWorldCenter())
+			#game.world.CreateJoint(jointDef)
 			@el.innerHTML = "I AM A DIV"
 			super
 
