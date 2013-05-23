@@ -12,21 +12,19 @@ define [
 	'bin/ActorPixiColumbo'
 	], (_, EventDispatcher, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor, ActorDOM, ActorPixi, ActorPixiHero, ActorPixiColumbo) ->
 
-	class ActorManager extends EventDispatcher
+	class Box2DActorManager extends EventDispatcher
 
-		constructor: (game) ->
+		constructor: () ->
 			super
-			
-			# save a reference to the game that created us
-			@game = game
-
-			# an array to hold all of our actors by id
+			# object to hold all of our actor objects
+			@type = @type || "ActorManager"
 			@actors = []
+			@world = World.get()
 
 		# factory method, returns an Actor object based on criteria
 		actorFactory: (actorType, options) ->
-
 			switch(actorType)
+				when "Actor" then new Actor(@generateUID(), options)
 				when "PlatformActor" then new PlatformActor(@generateUID(), options)
 				when "QuestionMarkActor" then new QuestionMarkActor(@generateUID(), options)
 				when "EnemyTurtleActor" then new EnemyTurtleActor(@generateUID(), options)
@@ -54,9 +52,11 @@ define [
 
 		deleteActor: (actor) ->
 			actor.remove()
+			@world.removeBody(actor.body)	
 
 		# loop through all actors and update each one
 		update: () ->
+			@world.update()
 			# update all dynamic actors
 			_.each @actors, (actor) =>	
 				if actor.dynamic
@@ -68,4 +68,4 @@ define [
 			@actors = _.filter @actors, (actor) ->
 				actor.alive
 
-	return ActorManager
+	return Box2DActorManager

@@ -16,6 +16,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev'], (Box2D, PIXI) ->
 			@world = null
 			@stage = null
 
+			b2World = Box2D.Dynamics.b2World
+			b2Vec2 = Box2D.Common.Math.b2Vec2
+			b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+
 			constructor: () ->
 				# create ourselves a world with some standard-style gravity
 				@world = new b2World(new b2Vec2(0, 10), true)

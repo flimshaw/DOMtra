@@ -1,4 +1,4 @@
-define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
+define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 
 	# map all our wacky Box2D methods to some more accessible places
 	b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -25,11 +25,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 		@dynamic = false
 
 		constructor: (id, options = false) ->
+
 			# receive our ID, and options from our constructor
 			@id = id
 			@options = options
-
-			@world = World.get()
 
 			# by default, we are alive
 			@alive = true
@@ -96,7 +95,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/World'], (Box2D, World) ->
 			bodyDef.fixedRotation = !@rotation
 
 			# instantiate our body element, and add it to the world
-			@body = @world.createBody(bodyDef, fixDef)
+			@body = game.createBody(bodyDef, fixDef)
 
 			@hitCount = 0
 
