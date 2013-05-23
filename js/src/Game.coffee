@@ -24,15 +24,54 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 			# add it to the document
 			document.body.appendChild(@renderer.view)
 
+			addEventListener('mousedown', @spawnBlock)
+
 			# start a box2d world
-			@world = new b2World(new b2Vec2(0, 10), true)
+			@world = new b2World(new b2Vec2(0, 30), true)
 
 			# start an actor manager
 			@actorManager = new ActorManager(@)
 
-			@maxColumbos = 1000
+			@contactListener =
+				BeginContact: (idA, idB) ->
+					return 1
+				EndContact: () ->
+					return 1
+				PreSolve: () ->
+					return 1
+				PostSolve: (idA, idB, impulse) ->
+					actorA = game.actorManager.getActorByUID(idA)
+					actorB = game.actorManager.getActorByUID(idB)
+					if actorA != -1 && actorB != -1
+						if(actorA.dynamic)
+							actorA.hit(actorB)
+						if(actorB.dynamic)
+							actorB.hit(actorA)
+
+			#@addContactListener(@contactListener)
+
+			@maxBricks = 100
 
 			super
+
+		# function to create a new contact listener
+		addContactListener: (callbacks) ->
+			listener = new Box2D.Dynamics.b2ContactListener
+
+			if callbacks.BeginContact then listener.BeginContact = (contact) ->
+				callbacks.BeginContact(contact.GetFixtureA().GetBody().GetUserData(), contact.GetFixtureB().GetBody().GetUserData())
+
+			if callbacks.EndContact then listener.EndContact = (contact) ->
+				callbacks.EndContact(contact.GetFixtureA().GetBody().GetUserData(), contact.GetFixtureB().GetBody().GetUserData())
+
+			if callbacks.PostSolve then listener.PostSolve = (contact, impulse) ->
+				callbacks.PostSolve(contact.GetFixtureA().GetBody().GetUserData(), contact.GetFixtureB().GetBody().GetUserData(), impulse.normalImpulses[0])
+
+			@world.SetContactListener(listener)
+
+		spawnBlock: (evt) =>
+			for x in [0..10]
+				@actorManager.spawnActor('PlatformActor', { width: 16, height: 16, x: evt.x, y: evt.y, rotation: true, dynamic: evt.button == 0 })
 
 		createBody: (bodyDef, fixDef) ->
 			body = @world.CreateBody(bodyDef)
@@ -43,21 +82,23 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 			@world.DestroyBody(body)
 
 		start: () ->
-			@actorManager.spawnActor('PlatformActor', { width: window.innerWidth, height: 32, x: 0, y: window.innerHeight - 32 })
+			@actorManager.spawnActor('PlatformActor', { width: window.innerWidth * .5, height: 32, x: window.innerWidth / 4, y: window.innerHeight - 32 })
+			for i in [0..5]
+				@actorManager.spawnActor('PlatformActor', { width: 128, height: 32, x: window.innerWidth * Math.random(), y: window.innerHeight * Math.random(), dynamic: true, rotation: true, fixed: true })
 			@spawnHero()
 			requestAnimFrame @update
 			@dispatch("gameStarted")
 
 		spawnHero: () ->
-			@actorManager.spawnActor('ActorPixiHero', { x: (window.innerWidth * .9) * Math.random(), y: 200 })
+			@actorManager.spawnActor('ActorPixiHero', { width: 34, height: 52, x: (window.innerWidth * .9) * Math.random(), y: 200 })
 
-		spawnColumbos: () ->
-			if @actorManager.actors.length < @maxColumbos
-				@actorManager.spawnActor('ActorPixiColumbo', { width: 34, height: 52, x: window.innerWidth * Math.random(), y: -80 })
+		spawnBricks: () ->
+			if @actorManager.actors.length < @maxBricks
+				@actorManager.spawnActor('PlatformActor', { width: 16, height: 16, x: Math.random() * window.innerWidth, y: -50, rotation: true, dynamic: true })
 
 		update: () =>
 			requestAnimFrame @update
-			#@spawnColumbos()
+			@spawnBricks()
 			@actorManager.update()
 			@world.Step(1 / 60, 10, 10);
 			@renderer.render(@stage)

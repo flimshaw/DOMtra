@@ -3,20 +3,31 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 	# special vars for actors
 	DRAW_SCALE = 32
 
-	b2World = Box2D.Dynamics.b2World
+	# map all our wacky Box2D methods to some more accessible places
 	b2Vec2 = Box2D.Common.Math.b2Vec2
+	b2AABB = Box2D.Collision.b2AABB
+	b2BodyDef = Box2D.Dynamics.b2BodyDef
+	b2Body = Box2D.Dynamics.b2Body
+	b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+	b2Fixture = Box2D.Dynamics.b2Fixture
+	b2World = Box2D.Dynamics.b2World
+	b2MassData = Box2D.Collision.Shapes.b2MassData
+	b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+	b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
 	b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+	b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef
 
 	class ActorPixiHero extends ActorPixi
 
 		@body = false
-
 		@jump = false
 
+		@numFootContacts = 0
+
+
 		jump: () =>
-			console.log("applyingForce")
-			vec = new b2Vec2( 0, -500)
-			@body.ApplyImpulse(vec, @body.GetWorldCenter())
+			impulse = @body.GetMass() * 10
+			@body.ApplyImpulse(new b2Vec2(0, -impulse), @body.GetWorldCenter())
 
 		keyboardDownListener: (evt) =>
 			switch evt.keyCode
@@ -28,25 +39,75 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 		keyboardUpListener: (evt) =>
            if evt.keyCode == 37 || evt.keyCode == 39 then @heroDirection = false
 
+		setup: () ->
+			# create a platform with some default settings
+			fixDef = new b2FixtureDef
+			fixDef.density = @density
+			fixDef.friction = @friction
+			fixDef.restitution = @restitution
+			
+			fixDef.shape = new b2PolygonShape
+			fixDef.shape.SetAsBox((@width / 2) / DRAW_SCALE, (@height / 2) / DRAW_SCALE)
+
+			# create a new body definition
+			bodyDef = new b2BodyDef
+			if @dynamic
+				bodyDef.type = b2Body.b2_dynamicBody
+			else
+				bodyDef.type = b2Body.b2_staticBody
+
+			# positions the center of the object (not upper left!)
+			wX = (@x + (@width / 2)) / DRAW_SCALE
+			wY = (@y + (@height / 2)) / DRAW_SCALE
+			bodyDef.position.Set(wX, wY)
+			bodyDef.userData = "hero"
+			bodyDef.fixedRotation = !@rotation
+			bodyDef.allowSleep = @allowSleep
+
+			# instantiate our body element, and add it to the world
+			@body = game.createBody(bodyDef, fixDef)
+
+			fixDef.shape.SetAsBox(.3, .3, b2Vec2(0, -(@height / 2) / DRAW_SCALE), 0)
+			fixDef.isSensor = true
+			footSensorFixture = @body.CreateFixture(fixDef)
+			footSensorFixture.SetUserData("heroFootSensor")
+
+			@hitCount = 0
+
+			@contactListener =
+				BeginContact: (contact) ->
+					#console.log(contact)
+				EndContact: (contact) ->
+					#console.log(contact)
+				PreSolve: () ->
+					return 1
+				PostSolve: (contact, impulse) ->
+					return 1
+
+			@addContactListener(@contactListener)
+
+		hit: (actor) ->
+			#console.log(actor)
+
 		preSetup: () ->
 			@dynamic = true
 			@rotation = false
-			@width = 128
-			@height = 128
 			@restitution = 0
-			@density = 1.5
 			@friction = 0
+			@allowSleep = false
 
 			# custom vars
 			@jumpVector = 270
-			@jumpPower = 10
+			@jumpPower = 500
 			@walkPower = 10
 			@heroDirection = false
 
+			# add keyboard listeners
 			addEventListener('keydown', @keyboardDownListener, true);
+			addEventListener('keyup', @keyboardUpListener, true);
 
 		postSetup: () ->
-			texture = PIXI.Texture.fromImage("images/test_sprite.jpg")
+			texture = PIXI.Texture.fromImage("images/columbo2.png")
 			@el = new PIXI.Sprite(texture)
 			@el.position.x = @x
 			@el.position.y = @y
@@ -65,7 +126,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			else if @heroDirection == "left"
 				@body.SetLinearVelocity(new b2Vec2(-@walkPower, lv.y))
 			else
-				@body.SetLinearVelocity(new b2Vec2(-lv.x, lv.y))
+				if lv.x != 0
+					if Math.abs(lv.x) < .1
+						lv.x = 0
+					@body.SetLinearVelocity(new b2Vec2(lv.x * .95, lv.y))
 
 			super
 

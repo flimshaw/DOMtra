@@ -51,6 +51,7 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 			@density = if options.density == undefined then 1.0 else options.density
 			@friction = if options.friction == undefined then .5 else options.friction
 			@restitution = if options.restitution == undefined then .5 else options.restitution
+			@allowSleep = if options.allowSleep == undefined then true else options.allowSleep
 
 			# overidden by children classes
 			@preSetup()
@@ -64,11 +65,29 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 			# kickstart the update process
 			@update()
 
+		# function to create a new contact listener
+		addContactListener: (callbacks) ->
+			listener = new Box2D.Dynamics.b2ContactListener
+
+			if callbacks.BeginContact then listener.BeginContact = (contact) ->
+				callbacks.BeginContact(contact)
+
+			if callbacks.EndContact then listener.EndContact = (contact) ->
+				callbacks.EndContact(contact)
+
+			if callbacks.PostSolve then listener.PostSolve = (contact, impulse) ->
+				callbacks.PostSolve(contact, impulse)
+
+			game.world.SetContactListener(listener)
+
 		preSetup: () ->
 			return 1
 
 		postSetup: () ->
-			return
+			return 1
+
+		customBodySettings: (body) ->
+			return body
 
 		setup: () ->
 			# create a platform with some default settings
@@ -93,7 +112,9 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 			bodyDef.position.Set(wX, wY)
 			bodyDef.userData = @id
 			bodyDef.fixedRotation = !@rotation
+			bodyDef.allowSleep = @allowSleep
 
+			bodyDef = @customBodySettings(bodyDef)
 			# instantiate our body element, and add it to the world
 			@body = game.createBody(bodyDef, fixDef)
 
@@ -101,8 +122,7 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 
 
 		remove: () ->
-			return 1
-
+			game.world.DestroyBody(@body)
 
 		# receive a hit from another actor on the stage somewhere
 		hit: (actor) ->

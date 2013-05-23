@@ -7,10 +7,6 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/Actor'], (Box2D, PIXI
 
 		@body = false
 
-		preSetup: () ->
-			@dynamic = true
-			@rotation = true
-
 		postSetup: () ->
 			texture = PIXI.Texture.fromImage("images/brick.gif")
 			@el = new PIXI.Sprite(texture)
@@ -20,10 +16,11 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/Actor'], (Box2D, PIXI
 			@el.anchor.y = .5
 			@el.width = @width
 			@el.height = @height
-			body.stage.addChild(@el)
+			game.stage.addChild(@el)
 			@elReady = true
 
 		remove: () ->
+			super()
 			game.stage.removeChild(@el)
 
 		update: () ->
