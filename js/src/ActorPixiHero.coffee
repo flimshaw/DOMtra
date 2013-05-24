@@ -24,14 +24,30 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 
 		jump: () =>
-			if @jumpCount <= 0
-				@jumpCount = 1
+			if @canJump()
 				impulse = @body.GetMass() * 10
 				@body.ApplyImpulse(new b2Vec2(0, -impulse), @body.GetWorldCenter())
 
+		canJump: () ->
+			if !@body.GetContactList()
+				return false
+
+			contact = @body.GetContactList().contact
+			if !@isFootContact(contact)
+				while contact = contact.m_next
+					if @isFootContact(contact)
+						if contact.IsTouching()
+							return true
+			return false
+
+		isFootContact: (contact) ->
+			if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
+				return true
+			return false
+
 		keyboardDownListener: (evt) =>
 			switch evt.keyCode
-				when 38 then @jump()
+				when 32 then @jump()
 				when 37 then @heroDirection = "left"
 				when 39 then @heroDirection = "right"
 				else console.log(evt.keyCode)
@@ -40,7 +56,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
            if evt.keyCode == 37 || evt.keyCode == 39 then @heroDirection = false
 
 		setup: () ->
-			@jumpCount = 1
+			@jumpCount = 0
 			@id = "hero"
 			# create a platform with some default settings
 			fixDef = new b2FixtureDef
@@ -72,7 +88,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			footDef = new b2FixtureDef
 			footDef.isSensor = true
 			footDef.shape = new b2PolygonShape
-			footDef.shape.SetAsOrientedBox(.3, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
+			footDef.shape.SetAsOrientedBox((@width) / DRAW_SCALE, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
 			footSensorFixture = @body.CreateFixture(footDef)
 			footSensorFixture.SetUserData("heroFootSensor")
 
@@ -80,10 +96,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 			@contactListener =
 				BeginContact: (contact) =>
-					if contact.m_fixtureA.GetUserData() == "heroFootSensor"
+					if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
 						@jumpCount--
 				EndContact: (contact) =>
-					if contact.m_fixtureA.GetUserData() == "heroFootSensor"
+					if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
 						@jumpCount++
 				PreSolve: () ->
 					return 1
