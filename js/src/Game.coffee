@@ -82,10 +82,17 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 			@world.DestroyBody(body)
 
 		start: () ->
+			assetsToLoader = [ "/images/columbo_sheet.json"]
+
+			loader = new PIXI.AssetLoader(assetsToLoader)
+
+			loader.onComplete = () =>
+				@spawnHero()
+
+			loader.load()
 			@actorManager.spawnActor('PlatformActor', { width: window.innerWidth * .5, height: 32, x: window.innerWidth / 4, y: window.innerHeight - 32 })
 			for i in [0..5]
 				@actorManager.spawnActor('PlatformActor', { width: 128, height: 32, x: window.innerWidth * Math.random(), y: window.innerHeight * Math.random(), dynamic: true, rotation: true, fixed: true })
-			@spawnHero()
 			requestAnimFrame @update
 			@dispatch("gameStarted")
 
@@ -94,11 +101,11 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 
 		spawnBricks: () ->
 			if @actorManager.actors.length < @maxBricks
-				@actorManager.spawnActor('PlatformActor', { width: 16, height: 16, x: Math.random() * window.innerWidth, y: -50, rotation: true, dynamic: true })
+				@actorManager.spawnActor('PlatformActor', { width: 32, height: 32, x: Math.random() * window.innerWidth, y: -50, rotation: true, dynamic: true })
 
 		update: () =>
 			requestAnimFrame @update
-			#@spawnBricks()
+			@spawnBricks()
 			@actorManager.update()
 			@world.Step(1 / 60, 10, 10);
 			@renderer.render(@stage)

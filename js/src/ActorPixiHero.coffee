@@ -22,10 +22,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 		@body = false
 		@numFootContacts = 0
 
-
 		jump: () =>
 			if @canJump()
-				impulse = @body.GetMass() * 10
+				@jumping = true
+				impulse = @body.GetMass() * @jumpPower
 				@body.ApplyImpulse(new b2Vec2(0, -impulse), @body.GetWorldCenter())
 
 		canJump: () ->
@@ -57,6 +57,24 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 		setup: () ->
 			@jumpCount = 0
+			@jumping = false
+			@animateSpeed = 15
+			@frameCount = 0
+			@animationCounter = 0
+
+			@animations = 
+				walk:
+					frames: ["columbo_walk_0.png", "columbo_walk_1.png"],
+					speed: 15
+				fumble:
+					frames: ["columbo_rifle_cigar_0.png", "columbo_rifle_cigar_1.png", "columbo_rifle_cigar_2.png", "columbo_rifle_cigar_3.png"]
+					speed: 15
+				jump:
+					frames: ["columbo_jump.png"]
+					speed: 15
+
+			@setAnimation("fumble")
+
 			@id = "hero"
 			# create a platform with some default settings
 			fixDef = new b2FixtureDef
@@ -97,10 +115,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@contactListener =
 				BeginContact: (contact) =>
 					if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
-						@jumpCount--
+						@jumping = false
 				EndContact: (contact) =>
 					if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
-						@jumpCount++
+						@jumpCount--
 				PreSolve: () ->
 					return 1
 				PostSolve: (contact, impulse) ->
@@ -111,6 +129,12 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 		hit: (actor) ->
 			#console.log(actor)
 
+		setAnimation: (animation) ->
+			@currentAnimation = @animations[animation]
+			@currentAnimationName = animation
+			@animationCounter = 0
+			@frameCount = 0
+
 		preSetup: () ->
 			@dynamic = true
 			@rotation = false
@@ -120,7 +144,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 			# custom vars
 			@jumpVector = 270
-			@jumpPower = 500
+			@jumpPower = 15
 			@walkPower = 10
 			@heroDirection = false
 
@@ -129,7 +153,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			addEventListener('keyup', @keyboardUpListener, true);
 
 		postSetup: () ->
-			texture = PIXI.Texture.fromImage("images/columbo2.png")
+			texture = PIXI.Texture.fromFrame(@currentAnimation.frames[0])
 			@el = new PIXI.Sprite(texture)
 			@el.position.x = @x
 			@el.position.y = @y
@@ -140,9 +164,29 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			game.stage.addChild(@el)
 			@elReady = true
 
+		animate: () ->
+			if @jumping == true
+				if @currentAnimationName != "jump"
+					@setAnimation("jump")
+			else if @heroDirection != false
+				if @currentAnimationName != "walk"
+					@setAnimation("walk")
+			else
+				if @currentAnimationName != "fumble"
+					@setAnimation("fumble")
+
+			if @frameCount % @animateSpeed == 0
+				@animationCounter++
+				if @animationCounter > @currentAnimation.frames.length - 1
+					@animationCounter = 0
+				@el.setTexture(PIXI.Texture.fromFrame(@currentAnimation.frames[@animationCounter]))
+			if @frameCount > 100
+				@frameCount = 0
+			@frameCount++
+
 		update: () ->
 			lv = @body.GetLinearVelocity();
-
+			
 			if @heroDirection == "right" 
 				@body.SetLinearVelocity(new b2Vec2(@walkPower, lv.y))
 			else if @heroDirection == "left"
@@ -152,6 +196,8 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 					if Math.abs(lv.x) < .1
 						lv.x = 0
 					@body.SetLinearVelocity(new b2Vec2(lv.x * .95, lv.y))
+
+			@animate()
 
 			super
 
