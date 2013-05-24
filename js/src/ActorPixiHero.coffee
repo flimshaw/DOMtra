@@ -40,6 +40,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
            if evt.keyCode == 37 || evt.keyCode == 39 then @heroDirection = false
 
 		setup: () ->
+			@id = "hero"
 			# create a platform with some default settings
 			fixDef = new b2FixtureDef
 			fixDef.density = @density
@@ -67,9 +68,11 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			# instantiate our body element, and add it to the world
 			@body = game.createBody(bodyDef, fixDef)
 
-			fixDef.shape.SetAsBox(.3, .3, b2Vec2(0, -(@height / 2) / DRAW_SCALE), 0)
-			fixDef.isSensor = true
-			footSensorFixture = @body.CreateFixture(fixDef)
+			footDef = new b2FixtureDef
+			footDef.isSensor = true
+			footDef.shape = new b2PolygonShape
+			footDef.shape.SetAsOrientedBox(.3, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
+			footSensorFixture = @body.CreateFixture(footDef)
 			footSensorFixture.SetUserData("heroFootSensor")
 
 			@hitCount = 0

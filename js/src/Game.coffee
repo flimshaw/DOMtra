@@ -90,7 +90,7 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 			@dispatch("gameStarted")
 
 		spawnHero: () ->
-			@actorManager.spawnActor('ActorPixiHero', { width: 34, height: 52, x: (window.innerWidth * .9) * Math.random(), y: 200 })
+			@actorManager.spawnActor('ActorPixiHero', { width: 34, height: 52, x: (window.innerWidth * .5) * Math.random() + (window.innerWidth / 4), y: 200 })
 
 		spawnBricks: () ->
 			if @actorManager.actors.length < @maxBricks
