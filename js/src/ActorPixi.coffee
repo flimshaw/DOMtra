@@ -8,7 +8,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/Actor'], (Box2D, PIXI
 		@body = false
 
 		postSetup: () ->
-			texture = PIXI.Texture.fromImage("images/brick.gif")
+			texture = PIXI.Texture.fromFrame("mario-question-box.png")
 			@el = new PIXI.Sprite(texture)
 			@el.position.x = @x
 			@el.position.y = @y

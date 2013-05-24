@@ -50,7 +50,7 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 
 			#@addContactListener(@contactListener)
 
-			@maxBricks = 100
+			@maxBricks = 10
 
 			super
 
@@ -87,12 +87,16 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 			loader = new PIXI.AssetLoader(assetsToLoader)
 
 			loader.onComplete = () =>
-				@spawnHero()
+				@init()
 
 			loader.load()
+
+
+		init: () ->
+			@spawnHero()
 			@actorManager.spawnActor('PlatformActor', { width: window.innerWidth * .5, height: 32, x: window.innerWidth / 4, y: window.innerHeight - 32 })
 			for i in [0..5]
-				@actorManager.spawnActor('PlatformActor', { width: 128, height: 32, x: window.innerWidth * Math.random(), y: window.innerHeight * Math.random(), dynamic: true, rotation: true, fixed: true })
+				@actorManager.spawnActor('PlatformActor', { density: 20, width: 256, height: 32, x: window.innerWidth * Math.random(), y: window.innerHeight * Math.random(), dynamic: true, rotation: true, fixed: true })
 			requestAnimFrame @update
 			@dispatch("gameStarted")
 
