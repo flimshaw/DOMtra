@@ -20,14 +20,14 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 	class ActorPixiHero extends ActorPixi
 
 		@body = false
-		@jump = false
-
 		@numFootContacts = 0
 
 
 		jump: () =>
-			impulse = @body.GetMass() * 10
-			@body.ApplyImpulse(new b2Vec2(0, -impulse), @body.GetWorldCenter())
+			if @jumpCount <= 0
+				@jumpCount = 1
+				impulse = @body.GetMass() * 10
+				@body.ApplyImpulse(new b2Vec2(0, -impulse), @body.GetWorldCenter())
 
 		keyboardDownListener: (evt) =>
 			switch evt.keyCode
@@ -40,6 +40,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
            if evt.keyCode == 37 || evt.keyCode == 39 then @heroDirection = false
 
 		setup: () ->
+			@jumpCount = 1
 			@id = "hero"
 			# create a platform with some default settings
 			fixDef = new b2FixtureDef
@@ -78,10 +79,12 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@hitCount = 0
 
 			@contactListener =
-				BeginContact: (contact) ->
-					#console.log(contact)
-				EndContact: (contact) ->
-					#console.log(contact)
+				BeginContact: (contact) =>
+					if contact.m_fixtureA.GetUserData() == "heroFootSensor"
+						@jumpCount--
+				EndContact: (contact) =>
+					if contact.m_fixtureA.GetUserData() == "heroFootSensor"
+						@jumpCount++
 				PreSolve: () ->
 					return 1
 				PostSolve: (contact, impulse) ->

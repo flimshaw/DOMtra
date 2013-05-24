@@ -98,7 +98,7 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 
 		update: () =>
 			requestAnimFrame @update
-			@spawnBricks()
+			#@spawnBricks()
 			@actorManager.update()
 			@world.Step(1 / 60, 10, 10);
 			@renderer.render(@stage)
