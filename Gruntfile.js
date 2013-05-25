@@ -118,6 +118,14 @@ module.exports = function(grunt) {
         dest: 'js/bin',
         ext: '.js'
       }
+    },
+    shell: {
+      echo: {
+        command: 'echo "hello"',
+        options: {
+          stdout: true
+        }
+      }
     }
   });
 
@@ -133,6 +141,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
 
   // Default task.
-  grunt.registerTask('default', ['coffee', 'concat', 'uglify']);
+  grunt.registerTask('default', ['coffee', 'requirejs']);
 
 };

@@ -10,7 +10,9 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 		window.b2Vec2 = Box2D.Common.Math.b2Vec2
 		window.b2DebugDraw = Box2D.Dynamics.b2DebugDraw
 
-		constructor: () ->
+		constructor: (options) ->
+
+			@options = options || {}
 
 			# create a global for this game
 			window.game = @;

@@ -1,2 +1,6 @@
 node_modules/*
 css/*.css
+js/vendor/DOMtra.js
+js/bin/*
+build/*
+dist/*
