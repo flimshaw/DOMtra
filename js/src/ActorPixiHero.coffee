@@ -20,7 +20,6 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 	class ActorPixiHero extends ActorPixi
 
 		@body = false
-		@numFootContacts = 0
 
 		jump: () =>
 			if @canJump()
@@ -29,16 +28,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 				@body.ApplyImpulse(new b2Vec2(0, -impulse), @body.GetWorldCenter())
 
 		canJump: () ->
-			if !@body.GetContactList()
-				return false
-
-			contact = @body.GetContactList().contact
-			if !@isFootContact(contact)
-				while contact = contact.m_next
-					if @isFootContact(contact)
-						if contact.IsTouching()
-							return true
-			return false
+			if @footContacts > 0
+				true
+			else
+				false
 
 		isFootContact: (contact) ->
 			if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
@@ -48,19 +41,38 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 		keyboardDownListener: (evt) =>
 			switch evt.keyCode
 				when 32 then @jump()
-				when 37 then @heroDirection = "left"
-				when 39 then @heroDirection = "right"
+				when 37 then @pressKey("left")
+				when 39 then @pressKey("right")
 				else console.log(evt.keyCode)
 
 		keyboardUpListener: (evt) =>
-           if evt.keyCode == 37 || evt.keyCode == 39 then @heroDirection = false
+			if evt.keyCode == 37
+				@resetKey("left")
+			if evt.keyCode == 39
+				@resetKey("right")
+
+		pressKey: (key) ->
+			@pressedKeys[key] = true
+
+		keyPressed: (key) ->
+			if @pressedKeys[key] == true
+				return true
+			else
+				return false
+
+		resetKey: (key) ->
+			@pressedKeys[key] = false
 
 		setup: () ->
-			@jumpCount = 0
+			@footContacts = 0
 			@jumping = false
 			@animateSpeed = 15
 			@frameCount = 0
 			@animationCounter = 0
+
+			@pressedKeys = []
+
+			@walkSpeed = 10
 
 			@animations = 
 				walk:
@@ -68,12 +80,12 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 					speed: 15
 				fumble:
 					frames: ["columbo_rifle_cigar_0.png", "columbo_rifle_cigar_1.png", "columbo_rifle_cigar_2.png", "columbo_rifle_cigar_3.png"]
-					speed: 15
+					speed: 50
 				jump:
 					frames: ["columbo_jump.png"]
 					speed: 15
 
-			@setAnimation("fumble")
+			@setAnimation("walk")
 
 			@id = "hero"
 			# create a platform with some default settings
@@ -106,7 +118,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			footDef = new b2FixtureDef
 			footDef.isSensor = true
 			footDef.shape = new b2PolygonShape
-			footDef.shape.SetAsOrientedBox((@width) / DRAW_SCALE, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
+			footDef.shape.SetAsOrientedBox((@width / 2) / DRAW_SCALE, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
 			footSensorFixture = @body.CreateFixture(footDef)
 			footSensorFixture.SetUserData("heroFootSensor")
 
@@ -115,10 +127,10 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@contactListener =
 				BeginContact: (contact) =>
 					if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
-						@jumping = false
+						@footContacts++
 				EndContact: (contact) =>
 					if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
-						@jumpCount--
+						@footContacts--
 				PreSolve: () ->
 					return 1
 				PostSolve: (contact, impulse) ->
@@ -140,7 +152,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@rotation = false
 			@restitution = 0
 			@friction = 0
-			@allowSleep = false
+			@density = 1
 
 			# custom vars
 			@jumpVector = 270
@@ -161,6 +173,8 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@el.anchor.y = .5
 			@el.width = @width
 			@el.height = @height
+			@el.scale.x = 1
+			@el.scale.y = 1
 			game.stage.addChild(@el)
 			@elReady = true
 
@@ -175,7 +189,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 				if @currentAnimationName != "fumble"
 					@setAnimation("fumble")
 
-			if @frameCount % @animateSpeed == 0
+			if @frameCount % @currentAnimation.speed == 0
 				@animationCounter++
 				if @animationCounter > @currentAnimation.frames.length - 1
 					@animationCounter = 0
@@ -185,19 +199,29 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@frameCount++
 
 		update: () ->
-			lv = @body.GetLinearVelocity();
+
+			vel = @body.GetLinearVelocity()
+			force = 0
 			
-			if @heroDirection == "right" 
-				@body.SetLinearVelocity(new b2Vec2(@walkPower, lv.y))
-			else if @heroDirection == "left"
-				@body.SetLinearVelocity(new b2Vec2(-@walkPower, lv.y))
+			if @footContacts > 0
+				@jumping = false
+
+
+			if @keyPressed("right")
+				desiredVel = @walkSpeed
+			else if @keyPressed("left")
+				desiredVel = -@walkSpeed
 			else
-				if lv.x != 0
-					if Math.abs(lv.x) < .1
-						lv.x = 0
-					@body.SetLinearVelocity(new b2Vec2(lv.x * .95, lv.y))
+				desiredVel = 0
+
+			velChange = desiredVel - vel.x
+
+			force = (@body.GetMass() * velChange)
+
+			@body.ApplyImpulse( new b2Vec2(force, 0), @body.GetWorldCenter() )
 
 			@animate()
+			game.log("Foot Contacts #{@footContacts}")
 
 			super
 

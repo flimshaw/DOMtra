@@ -24,9 +24,13 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/Actor'], (Box2D, PIXI
 			game.stage.removeChild(@el)
 
 		update: () ->
-			if @body.IsAwake() != undefined && @elReady == true
+			if @body.IsAwake() && @elReady == true
 				@x = @el.position.x = (@body.GetPosition().x * DRAW_SCALE)
 				@y = @el.position.y = (@body.GetPosition().y * DRAW_SCALE)
-				@el.rotation = @body.GetAngle()
+				if @rotation
+					@el.rotation = @body.GetAngle()
+				@el.alpha = 1
+			else
+				@el.alpha = 0.5
 
 	return ActorPixi

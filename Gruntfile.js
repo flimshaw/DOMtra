@@ -55,9 +55,14 @@ module.exports = function(grunt) {
     requirejs: {
       compile: {
         options: {
-          baseUrl: "js/",
-          out: "build/optimized.js",
-          name: "main"
+          optimize: "none",
+          baseUrl: "js",
+          mainConfigFile: "js/config.js",
+          out: "js/vendor/DOMtra.js",
+          paths: {
+            'DOMtra': 'bin/DOMtra'
+          },
+          name: 'DOMtra'
         }
       }
     },

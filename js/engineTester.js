@@ -1,39 +1,22 @@
 require.config({
 	shim: {
-		"vendor/jquery-1.9.1.min": {
+		"jquery-1.9.1.min": {
 			exports: '$'
-		},
-		"vendor/underscore": {
-			exports: '_'
-		},
-		"vendor/Box2dWeb-2.1.a.3": {
-			exports: "Box2D"
-		},
-		"vendor/pixi.dev": {
-			exports: "PIXI"
 		}
-	}
+	},
+	baseUrl: 'js/vendor'
 });
 
 require(
 	[
-		'vendor/jquery-1.9.1.min',
-		'bin/Game'
+		'jquery-1.9.1.min',
+		'DOMtra'
 	],
-	function($, Game) {
+	function($, DOMtra) {
 
 		$(document).ready(function() {
 
-			// create a new DOMtra instance
-			var DOMtra = new Game();
-
-			window.DOMtra = DOMtra;
-
-			DOMtra.addEventListener("gameStarted", function(data) {
-				console.log(data);
-			});
-
-			DOMtra.start();
+			window.DOMtra = new DOMtra();
 
 		});
 

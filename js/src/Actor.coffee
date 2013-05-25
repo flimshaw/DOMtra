@@ -95,10 +95,9 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 			fixDef.density = @density
 			fixDef.friction = @friction
 			fixDef.restitution = @restitution
-			
 			fixDef.shape = new b2PolygonShape
 			fixDef.shape.SetAsBox((@width / 2) / DRAW_SCALE, (@height / 2) / DRAW_SCALE)
-
+			fixDef.filter.categoryBits = @options.categoryBits || 1
 			# create a new body definition
 			bodyDef = new b2BodyDef
 			if @dynamic
@@ -119,7 +118,6 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 			@body = game.createBody(bodyDef, fixDef)
 
 			@hitCount = 0
-
 
 		remove: () ->
 			game.world.DestroyBody(@body)

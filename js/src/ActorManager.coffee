@@ -68,4 +68,6 @@ define [
 			@actors = _.filter @actors, (actor) ->
 				actor.alive
 
+			game.log("Actors #{@actors.length}")
+
 	return ActorManager

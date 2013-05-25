@@ -1,19 +1,33 @@
 define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'vendor/requestAnimationFrame'], (EventDispatcher, Box2D, ActorManager, requestAnimFrame) ->
 
-	class PlatformGame extends EventDispatcher
+	class Game extends EventDispatcher
 
 		# special vars for actors
 		DRAW_SCALE = 32
 
 		# some Box2D short-form references
-		b2World = Box2D.Dynamics.b2World
-		b2Vec2 = Box2D.Common.Math.b2Vec2
-		b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+		window.b2World = Box2D.Dynamics.b2World
+		window.b2Vec2 = Box2D.Common.Math.b2Vec2
+		window.b2DebugDraw = Box2D.Dynamics.b2DebugDraw
 
 		constructor: () ->
 
 			# create a global for this game
 			window.game = @;
+
+			# get our console div
+			@el = document.createElement("div")
+			@el.setAttribute("id", "console")
+			@el.style.position = "absolute"
+			@el.style.left = 50
+			@el.style.top = 50
+			@el.style.width = 200
+			@el.style.height = 200
+			@el.style.opacity = .75
+			@el.style.color = "white"
+
+			# append our element to the document body
+			document.body.appendChild(@el)
 			
 			# start a new PIXI stage
 			@stage = new PIXI.Stage(0x000000)
@@ -50,7 +64,7 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 
 			#@addContactListener(@contactListener)
 
-			@maxBricks = 10
+			@maxBricks = 300
 
 			super
 
@@ -82,7 +96,7 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 			@world.DestroyBody(body)
 
 		start: () ->
-			assetsToLoader = [ "/images/columbo_sheet.json"]
+			assetsToLoader = [ "images/columbo_sheet.json"]
 
 			loader = new PIXI.AssetLoader(assetsToLoader)
 
@@ -96,7 +110,7 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 			@spawnHero()
 			@actorManager.spawnActor('PlatformActor', { width: window.innerWidth * .5, height: 32, x: window.innerWidth / 4, y: window.innerHeight - 32 })
 			for i in [0..5]
-				@actorManager.spawnActor('PlatformActor', { density: 20, width: 256, height: 32, x: window.innerWidth * Math.random(), y: window.innerHeight * Math.random(), dynamic: true, rotation: true, fixed: true })
+				@actorManager.spawnActor('PlatformActor', { density: 50, width: 256, height: 32, x: window.innerWidth * Math.random(), y: i * 100 + 200, dynamic: true, rotation: true, fixed: true })
 			requestAnimFrame @update
 			@dispatch("gameStarted")
 
@@ -105,12 +119,18 @@ define ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'v
 
 		spawnBricks: () ->
 			if @actorManager.actors.length < @maxBricks
-				@actorManager.spawnActor('PlatformActor', { width: 32, height: 32, x: Math.random() * window.innerWidth, y: -50, rotation: true, dynamic: true })
+				size = Math.floor(Math.random() * 32) + 8
+				@actorManager.spawnActor('PlatformActor', { width: size, height: size, x: Math.random() * window.innerWidth, y: -50, rotation: true, dynamic: true })
+
+		log: (message) ->
+			@el.innerHTML += "<br />" +  message
 
 		update: () =>
+			@el.innerHTML = ""
 			requestAnimFrame @update
 			@spawnBricks()
 			@actorManager.update()
 			@world.Step(1 / 60, 10, 10);
 			@renderer.render(@stage)
+
 			
