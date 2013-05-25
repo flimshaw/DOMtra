@@ -55,7 +55,7 @@ module.exports = function(grunt) {
     requirejs: {
       compile: {
         options: {
-          optimize: "none",
+          optimizer: "uglify2",
           baseUrl: "js",
           mainConfigFile: "js/config.js",
           out: "js/vendor/DOMtra.js",
@@ -130,6 +130,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
+  grunt.loadNpmTasks('grunt-shell');
 
   // Default task.
   grunt.registerTask('default', ['coffee', 'concat', 'uglify']);

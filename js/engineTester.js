@@ -18,6 +18,8 @@ require(
 
 			window.DOMtra = new DOMtra();
 
+			window.DOMtra.start();
+
 		});
 
 	}
