@@ -76,13 +76,13 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 			@animations = 
 				walk:
-					frames: ["columbo_walk_0.png", "columbo_walk_1.png"],
+					frames: ["hero_walk1.png", "hero_walk2.png", "hero_walk3.png", "hero_walk2.png"],
 					speed: 15
-				fumble:
-					frames: ["columbo_rifle_cigar_0.png", "columbo_rifle_cigar_1.png", "columbo_rifle_cigar_2.png", "columbo_rifle_cigar_3.png"]
+				stand:
+					frames: ["hero_stand.png"]
 					speed: 50
 				jump:
-					frames: ["columbo_jump.png"]
+					frames: ["hero_jump.png"]
 					speed: 15
 
 			@setAnimation("walk")
@@ -186,8 +186,8 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 				if @currentAnimationName != "walk"
 					@setAnimation("walk")
 			else
-				if @currentAnimationName != "fumble"
-					@setAnimation("fumble")
+				if @currentAnimationName != "stand"
+					@setAnimation("stand")
 
 			if @frameCount % @currentAnimation.speed == 0
 				@animationCounter++

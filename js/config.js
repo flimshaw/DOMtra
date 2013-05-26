@@ -11,6 +11,9 @@ require.config({
       },
       "vendor/pixi.dev": {
          exports: "PIXI"
+      },
+      "vendor/zepto.min": {
+         exports: '$'
       }
    }
 });

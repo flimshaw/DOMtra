@@ -1,0 +1,108 @@
+{"frames": {
+
+"hero_die.png":
+{
+	"frame": {"x":78,"y":2,"w":36,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":2,"w":36,"h":62},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_jump.png":
+{
+	"frame": {"x":2,"y":68,"w":44,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":0,"w":44,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_jump_shoot.png":
+{
+	"frame": {"x":2,"y":2,"w":50,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":0,"w":50,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_stand.png":
+{
+	"frame": {"x":48,"y":68,"w":26,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":0,"w":26,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_stand_shoot.png":
+{
+	"frame": {"x":42,"y":134,"w":38,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":0,"w":38,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_walk1.png":
+{
+	"frame": {"x":66,"y":200,"w":34,"h":62},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":2,"w":34,"h":62},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_walk1_shoot.png":
+{
+	"frame": {"x":76,"y":68,"w":40,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":2,"w":40,"h":62},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_walk2.png":
+{
+	"frame": {"x":54,"y":2,"w":22,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":0,"w":22,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_walk2_shoot.png":
+{
+	"frame": {"x":2,"y":134,"w":38,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":0,"w":38,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_walk3.png":
+{
+	"frame": {"x":116,"y":2,"w":34,"h":62},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":2,"w":34,"h":62},
+	"sourceSize": {"w":64,"h":64}
+},
+"hero_walk3_shoot.png":
+{
+	"frame": {"x":2,"y":200,"w":40,"h":62},
+	"rotated": true,
+	"trimmed": true,
+	"spriteSourceSize": {"x":18,"y":2,"w":40,"h":62},
+	"sourceSize": {"w":64,"h":64}
+},
+"question-box.png":
+{
+	"frame": {"x":82,"y":132,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "spriteSheet.png",
+	"format": "RGBA8888",
+	"size": {"w":256,"h":256},
+	"scale": "2",
+	"smartupdate": "$TexturePacker:SmartUpdate:29879ac8fee4d10f6022ccda3a4261c8$"
+}
+}

@@ -1,39 +1,28 @@
 define [
 	'vendor/underscore',
 	'bin/EventDispatcher',
-	'bin/World',
-	'bin/Actor',
 	'bin/PlatformActor',
-	'bin/QuestionMarkActor',
-	'bin/EnemyTurtleActor',
-	'bin/ActorDOM',
-	'bin/ActorPixi'
 	'bin/ActorPixiHero',
-	'bin/ActorPixiColumbo'
-	], (_, EventDispatcher, World, Actor, PlatformActor, QuestionMarkActor, EnemyTurtleActor, ActorDOM, ActorPixi, ActorPixiHero, ActorPixiColumbo) ->
+	], (_, EventDispatcher, PlatformActor, ActorPixiHero) ->
 
 	class ActorManager extends EventDispatcher
 
-		constructor: (game) ->
+		constructor: (level) ->
 			super
-			
+
 			# save a reference to the game that created us
-			@game = game
+			@level = level
 
 			# an array to hold all of our actors by id
 			@actors = []
 
+			@ready = true
+
 		# factory method, returns an Actor object based on criteria
 		actorFactory: (actorType, options) ->
-
 			switch(actorType)
 				when "PlatformActor" then new PlatformActor(@generateUID(), options)
-				when "QuestionMarkActor" then new QuestionMarkActor(@generateUID(), options)
-				when "EnemyTurtleActor" then new EnemyTurtleActor(@generateUID(), options)
-				when "ActorDOM" then new ActorDOM(@generateUID(), options)
-				when "ActorPixi" then new ActorPixi(@generateUID(), options)
 				when "ActorPixiHero" then new ActorPixiHero(@generateUID(), options)
-				when "ActorPixiColumbo" then new ActorPixiColumbo(@generateUID(), options)
 				else new Actor(@generateUID(), options)
 
 		# generate a guid for new actors

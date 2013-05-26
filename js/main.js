@@ -11,6 +11,9 @@ require.config({
 		},
 		"vendor/pixi.dev": {
 			exports: "PIXI"
+		},
+		"vendor/zepto.min": {
+			exports: "$"
 		}
 	},
 	paths: {
@@ -31,7 +34,6 @@ require(
 			window.DOMtra = new DOMtra();
 
 			window.DOMtra.start();
-
 
 		});
 

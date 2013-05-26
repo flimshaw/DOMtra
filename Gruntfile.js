@@ -55,7 +55,7 @@ module.exports = function(grunt) {
     requirejs: {
       compile: {
         options: {
-          optimizer: "uglify2",
+          optimize: "none",
           baseUrl: "js",
           mainConfigFile: "js/config.js",
           out: "js/vendor/DOMtra.js",
