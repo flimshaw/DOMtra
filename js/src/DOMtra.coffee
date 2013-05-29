@@ -1,4 +1,4 @@
-define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'vendor/requestAnimationFrame', 'bin/Level'], (EventDispatcher, Box2D, ActorManager, requestAnimFrame, Level) ->
+define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'vendor/requestAnimationFrame', 'bin/LevelBoxes'], (EventDispatcher, Box2D, ActorManager, requestAnimFrame, LevelBoxes) ->
 
 	class DOMtra extends EventDispatcher
 
@@ -16,7 +16,6 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 
 			# create a global for this game
 			window.game = @;
-
 			# get our console div
 			#@el = document.createElement("div")
 			#@el.setAttribute("id", "console")
@@ -33,6 +32,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			
 			# start a new PIXI stage
 			@stage = new PIXI.Stage()
+			@level = false
 
 			# start a renderer
 			@renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, null, true)
@@ -48,6 +48,9 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			@world = new b2World(new b2Vec2(0, 30), true)
 
 			super
+
+		loadLevel: (levelName) ->
+			@level = new LevelBoxes()
 
 		createBody: (bodyDef, fixDef) ->
 			body = @world.CreateBody(bodyDef).CreateFixture(fixDef).GetBody()
@@ -68,6 +71,8 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 
 		update: () =>
 			requestAnimFrame @update
+			if @level
+				@level.update()
 			@world.Step(1 / 60, 10, 10)
 			@renderer.render(@stage)
 

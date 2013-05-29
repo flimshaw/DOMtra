@@ -33,6 +33,8 @@ require(
 			// create a new DOMtra instance
 			window.DOMtra = new DOMtra();
 
+			window.DOMtra.loadLevel();
+
 			window.DOMtra.start();
 
 		});
