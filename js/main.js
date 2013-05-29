@@ -12,8 +12,8 @@ require.config({
 		"vendor/pixi.dev": {
 			exports: "PIXI"
 		},
-		"vendor/zepto.min": {
-			exports: "$"
+		"vendor/two": {
+			exports: "two"
 		}
 	},
 	paths: {
@@ -33,7 +33,15 @@ require(
 			// create a new DOMtra instance
 			window.DOMtra = new DOMtra();
 
+			window.DOMtra.addEventListener("gameStarted", function() {
+				var platform = new game.actors.Platform
+				console.log(platform)
+			})
+
 			window.DOMtra.start();
+
+			
+
 
 		});
 

@@ -1,4 +1,4 @@
-define ['vendor/Box2dWeb-2.1.a.3', 'bin/ActorPixi', 'bin/ActorDOM'], (Box2D, ActorPixi, ActorDOM) ->
+define ['vendor/Box2dWeb-2.1.a.3', 'bin/actors/ActorPixi', 'bin/actors/ActorDOM'], (Box2D, ActorPixi, ActorDOM) ->
 
 	class PlatformActor extends ActorPixi
 

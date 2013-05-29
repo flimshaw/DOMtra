@@ -15,14 +15,8 @@ define ['bin/ActorManager'], (ActorManager) ->
 
 			@actorsListing = data.actors
 
-			assetsToLoader = [ data.spriteSheet ]
+			@initializeActors()
 
-			loader = new PIXI.AssetLoader(assetsToLoader)
-
-			loader.onComplete = () =>
-				@initializeActors()
-
-			loader.load()
 
 		initializeActors: () ->
 
@@ -31,9 +25,6 @@ define ['bin/ActorManager'], (ActorManager) ->
 
 			for actor in @actorsListing
 				@actorManager.spawnActor(actor.type, actor.options)
-
-			for i in [0..50]
-				@actorManager.spawnActor('PlatformActor', { x: window.innerWidth * Math.random(), y: window.innerHeight * Math.random(), dynamic: true, rotation: true, fixed: true })
 
 			@ready = true
 
@@ -71,6 +62,4 @@ define ['bin/ActorManager'], (ActorManager) ->
 			@world.SetContactListener(listener)
 
 		update: () ->
-			size = Math.random() * 16 + 8
-			@actorManager.spawnActor('PlatformActor', { x: window.innerWidth * Math.random(), y: -100, width: size, height: size, dynamic: true, rotation: true  })
 			@actorManager.update()

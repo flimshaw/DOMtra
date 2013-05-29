@@ -1,8 +1,8 @@
 define [
 	'vendor/underscore',
 	'bin/EventDispatcher',
-	'bin/PlatformActor',
-	'bin/ActorPixiHero',
+	'bin/actors/PlatformActor',
+	'bin/actors/ActorPixiHero',
 	], (_, EventDispatcher, PlatformActor, ActorPixiHero) ->
 
 	class ActorManager extends EventDispatcher
@@ -12,6 +12,8 @@ define [
 
 			# save a reference to the game that created us
 			@level = level
+
+			game.actors.Platform = PlatformActor
 
 			# an array to hold all of our actors by id
 			@actors = []
@@ -43,6 +45,10 @@ define [
 
 		deleteActor: (actor) ->
 			actor.remove()
+
+		deleteAllActors: () ->
+			for actor in @actors
+				actor.remove()
 
 		# loop through all actors and update each one
 		update: () ->

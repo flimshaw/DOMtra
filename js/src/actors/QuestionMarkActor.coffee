@@ -1,4 +1,4 @@
-define ['bin/Actor'], (Actor) ->
+define ['bin/actors/Actor'], (Actor) ->
 
 	class QuestionMarkActor extends Actor
 

@@ -12,10 +12,16 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 
 		constructor: (options) ->
 
+			# create a global for this game
+			window.game = @
+
+			@actors = {}
+
 			@options = options || {}
 
-			# create a global for this game
-			window.game = @;
+			@actorManager = new ActorManager()
+
+
 
 			# get our console div
 			#@el = document.createElement("div")
@@ -59,7 +65,21 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 		setGravity: (x, y) ->
 			@world.SetGravity(new b2Vec2(x, y))
 
+		loadLevel: (levelJSON) ->
+			@level = new Level(levelJSON)
+
 		start: () ->
+
+			assetsToLoader = [ 'images/spriteSheet.json' ]
+
+			loader = new PIXI.AssetLoader(assetsToLoader)
+
+			loader.onComplete = () =>
+				@init()
+
+			loader.load()
+
+		init: () ->
 			requestAnimFrame @update
 			@dispatch("gameStarted")
 
@@ -68,6 +88,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 
 		update: () =>
 			requestAnimFrame @update
+			@actorManager.update()
 			@world.Step(1 / 60, 10, 10)
 			@renderer.render(@stage)
 

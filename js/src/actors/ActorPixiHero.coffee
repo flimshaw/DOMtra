@@ -1,4 +1,4 @@
-define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPixi'], (Box2D, PIXI, World, ActorPixi) ->
+define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/actors/ActorPixi'], (Box2D, PIXI, ActorPixi) ->
 
 	# special vars for actors
 	DRAW_SCALE = 32
