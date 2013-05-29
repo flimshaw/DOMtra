@@ -20,12 +20,6 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/ActorPixi', 'bin/ActorDOM'], (Box2D, Act
 			super
 
 		update: () ->
-			if @lifeSpan > 0
-				if @lifeCount > @lifeSpan
-					@die()
-				else
-					@lifeCount += 1
-					@el.alpha = (@lifeSpan - @lifeCount) * .001
 			if @y > window.innerHeight
 				@die()
 			super

@@ -5,10 +5,14 @@ define ['bin/ActorManager'], (ActorManager) ->
 		constructor: (jsonFile) ->
 
 			@ready = false
+			@alive = true
 
 			$.getJSON(jsonFile, @setup)
 
 		setup: (data) =>
+
+			# start an actor manager
+			@actorManager = new ActorManager(@)
 
 			# set gravity options
 			game.setGravity(data.world.gravity.x, data.world.gravity.y)
@@ -21,37 +25,34 @@ define ['bin/ActorManager'], (ActorManager) ->
 
 			loader.onComplete = () =>
 				@initializeActors()
+				@ready = true
 
 			loader.load()
 
+		# overwritten by children classes to define specific levels
 		initializeActors: () ->
-
-			# start an actor manager
-			@actorManager = new ActorManager(@)
-
 			for actor in @actorsListing
 				@actorManager.spawnActor(actor.type, actor.options)
+			@actorSetup()
 
-			for i in [0..50]
-				@actorManager.spawnActor('PlatformActor', { x: window.innerWidth * Math.random(), y: window.innerHeight * Math.random(), dynamic: true, rotation: true, fixed: true })
-
-			@ready = true
-
-			@contactListener =
-				BeginContact: (idA, idB) ->
-					return 1
-				EndContact: () ->
-					return 1
-				PreSolve: () ->
-					return 1
-				PostSolve: (idA, idB, impulse) ->
-					actorA = game.actorManager.getActorByUID(idA)
-					actorB = game.actorManager.getActorByUID(idB)
-					if actorA != -1 && actorB != -1
-						if(actorA.dynamic)
-							actorA.hit(actorB)
-						if(actorB.dynamic)
-							actorB.hit(actorA)
+		actorSetup: () ->
+			return 1
+		
+		contactListener: () ->
+			BeginContact: (idA, idB) ->
+				return 1
+			EndContact: () ->
+				return 1
+			PreSolve: () ->
+				return 1
+			PostSolve: (idA, idB, impulse) ->
+				actorA = game.actorManager.getActorByUID(idA)
+				actorB = game.actorManager.getActorByUID(idB)
+				if actorA != -1 && actorB != -1
+					if(actorA.dynamic)
+						actorA.hit(actorB)
+					if(actorB.dynamic)
+						actorB.hit(actorA)
 
 			#@addContactListener(@contactListener)
 
@@ -70,7 +71,15 @@ define ['bin/ActorManager'], (ActorManager) ->
 
 			@world.SetContactListener(listener)
 
+		# overwritten by children classes to determine level state and run special actor checks
+		behave: () ->
+			return true
+
+		die: () ->
+			@alive = false
+
 		update: () ->
-			size = Math.random() * 16 + 8
-			@actorManager.spawnActor('PlatformActor', { x: window.innerWidth * Math.random(), y: -100, width: size, height: size, dynamic: true, rotation: true  })
-			@actorManager.update()
+			if @ready
+				if !@behave()
+					@die()
+				@actorManager.update()
