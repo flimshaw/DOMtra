@@ -105,7 +105,7 @@ module.exports = function(grunt) {
         tasks: ['jshint:lib_test', 'qunit']
       },
       js: {
-        files: 'js/src/*.coffee',
+        files: ['js/src/*.coffee', 'js/levels/*.coffee'],
         tasks: ['coffee']
       }
     },
@@ -114,6 +114,14 @@ module.exports = function(grunt) {
         expand: true,
         flatten: true,
         cwd: 'js/src',
+        src: ['*.coffee'],
+        dest: 'js/bin',
+        ext: '.js'
+      },
+      level_compiler: {
+        expand: true,
+        flatten: true,
+        cwd: 'js/levels',
         src: ['*.coffee'],
         dest: 'js/bin',
         ext: '.js'
