@@ -33,10 +33,13 @@ define [
 			return guid
 
 		# attempt to create an actor from the json packet, return a reference to the actor we created
-		spawnActor: (actorType, options) ->
-			a = @actorFactory(actorType, options)
-			@actors.push a
-			return a
+		spawnActor: (actor, options) ->
+			if typeof actor == "string"
+				a = @actorFactory(actor, options)
+				@actors.push a
+			else
+				@actors.push actor
+			return actor
 
 		getActorByUID: (uid) ->
 			a = _.find @actors, (actor) ->

@@ -5,6 +5,12 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 		# special vars for actors
 		DRAW_SCALE = 32
 
+
+		# expose some of our prototypes for subclasses benefit
+		@EventDispatcher = EventDispatcher
+		@ActorManager = ActorManager
+		@Level = Level
+
 		# some Box2D short-form references
 		window.b2World = Box2D.Dynamics.b2World
 		window.b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -47,10 +53,6 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			# start a box2d world
 			@world = new b2World(new b2Vec2(0, 30), true)
 
-			# expose some of our prototypes for subclasses benefit
-			@EventDispatcher = EventDispatcher
-			@ActorManager = ActorManager
-			@Level = Level
 
 
 			super

@@ -1,6 +1,6 @@
-define ['vendor/jquery-1.9.1.min', 'bin/Level'], ($, Level) ->
+define ['vendor/jquery-1.9.1.min', 'DOMtra'], ($, DOMtra) ->
 
-	class LevelFlimshaw extends Level
+	class LevelFlimshaw extends DOMtra.Level
 
 		constructor: () ->
 			@maxParticles = 1000
