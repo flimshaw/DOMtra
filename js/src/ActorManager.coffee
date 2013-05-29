@@ -1,9 +1,10 @@
 define [
 	'vendor/underscore',
 	'bin/EventDispatcher',
+	'bin/Actor',
 	'bin/PlatformActor',
 	'bin/ActorPixiHero',
-	], (_, EventDispatcher, PlatformActor, ActorPixiHero) ->
+	], (_, EventDispatcher, Actor, PlatformActor, ActorPixiHero) ->
 
 	class ActorManager extends EventDispatcher
 
@@ -21,6 +22,7 @@ define [
 		# factory method, returns an Actor object based on criteria
 		actorFactory: (actorType, options) ->
 			switch(actorType)
+				when "Actor" then new Actor(@generateUID(), options)
 				when "PlatformActor" then new PlatformActor(@generateUID(), options)
 				when "ActorPixiHero" then new ActorPixiHero(@generateUID(), options)
 				else new Actor(@generateUID(), options)

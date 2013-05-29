@@ -32,6 +32,9 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 
 			# by default, we are alive
 			@alive = true
+			@lifeSpan = if options.lifeSpan == undefined then 0 else options.lifeSpan
+
+			@updateCount = 0
 
 			# is our body object dynamic or static
 			@dynamic = if options.dynamic == undefined then false else options.dynamic
@@ -138,6 +141,9 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 
 		# will almost certainly be overidden by child classes
 		update: () ->
+			@updateCount++
+			if @lifeSpan != 0 && @updateCount > @lifeSpan
+				@die()
 			if @body.IsAwake() != undefined
 				return 1
 
