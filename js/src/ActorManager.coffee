@@ -38,7 +38,7 @@ define [
 				a = @actorFactory(actor, options)
 				@actors.push a
 			else
-				@actors.push actor
+				@actors.push new actor(@generateUID(), options)
 			return actor
 
 		getActorByUID: (uid) ->

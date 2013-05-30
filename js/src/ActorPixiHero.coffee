@@ -40,7 +40,9 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 		keyboardDownListener: (evt) =>
 			switch evt.keyCode
-				when 32 then @jump()
+				when 32 
+					@jump()
+					evt.preventDefault()
 				when 37 then @pressKey("left")
 				when 39 then @pressKey("right")
 				else console.log(evt.keyCode)
@@ -76,8 +78,8 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 			@animations = 
 				walk:
-					frames: ["hero_walk1.png", "hero_walk2.png", "hero_walk3.png", "hero_walk2.png"],
-					speed: 15
+					frames: ["hero_walk2.png", "hero_walk3.png", "hero_walk2.png", "hero_walk1.png" ],
+					speed: 12
 				stand:
 					frames: ["hero_stand.png"]
 					speed: 50
@@ -85,7 +87,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 					frames: ["hero_jump.png"]
 					speed: 15
 
-			@setAnimation("walk")
+			@setAnimation("jump")
 
 			@id = "hero"
 			# create a platform with some default settings
@@ -118,7 +120,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			footDef = new b2FixtureDef
 			footDef.isSensor = true
 			footDef.shape = new b2PolygonShape
-			footDef.shape.SetAsOrientedBox((@width / 2) / DRAW_SCALE, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
+			footDef.shape.SetAsOrientedBox((@width / 4) / DRAW_SCALE, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
 			footSensorFixture = @body.CreateFixture(footDef)
 			footSensorFixture.SetUserData("heroFootSensor")
 
@@ -179,15 +181,20 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@elReady = true
 
 		animate: () ->
-			if @jumping == true
+			if @footContacts <= 0
 				if @currentAnimationName != "jump"
 					@setAnimation("jump")
-			else if @heroDirection != false
+			else if Math.abs(@currentVel.x) > 0
 				if @currentAnimationName != "walk"
 					@setAnimation("walk")
 			else
 				if @currentAnimationName != "stand"
 					@setAnimation("stand")
+
+			if @currentVel.x < 0
+				@el.scale.x = -1
+			else if @currentVel.x > 0
+				@el.scale.x = 1
 
 			if @frameCount % @currentAnimation.speed == 0
 				@animationCounter++
@@ -201,11 +208,11 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 		update: () ->
 
 			vel = @body.GetLinearVelocity()
+			@currentVel = vel
 			force = 0
 			
-			if @footContacts > 0
+			if @footContacts > 0 && @jumping == true && @currentVel.y < 0
 				@jumping = false
-
 
 			if @keyPressed("right")
 				desiredVel = @walkSpeed
@@ -221,7 +228,6 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@body.ApplyImpulse( new b2Vec2(force, 0), @body.GetWorldCenter() )
 
 			@animate()
-			game.log("Foot Contacts #{@footContacts}")
 
 			super
 

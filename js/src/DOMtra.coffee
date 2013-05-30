@@ -1,20 +1,48 @@
-define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'vendor/requestAnimationFrame', 'bin/Level'], (EventDispatcher, Box2D, ActorManager, requestAnimFrame, Level) ->
+define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'vendor/requestAnimationFrame', 'bin/Level', 'bin/ActorPixi'], (EventDispatcher, Box2D, ActorManager, requestAnimFrame, Level, ActorPixi) ->
 
 	class DOMtra extends EventDispatcher
 
 		# special vars for actors
 		DRAW_SCALE = 32
+		@DRAW_SCALE = DRAW_SCALE
 
 
 		# expose some of our prototypes for subclasses benefit
 		@EventDispatcher = EventDispatcher
 		@ActorManager = ActorManager
+		@ActorPixi = ActorPixi
 		@Level = Level
+		@Box2D = Box2D
 
-		# some Box2D short-form references
-		window.b2World = Box2D.Dynamics.b2World
-		window.b2Vec2 = Box2D.Common.Math.b2Vec2
-		window.b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+		# map all our wacky Box2D methods to some more accessible places
+		b2Vec2 = Box2D.Common.Math.b2Vec2
+		b2AABB = Box2D.Collision.b2AABB
+		b2BodyDef = Box2D.Dynamics.b2BodyDef
+		b2Body = Box2D.Dynamics.b2Body
+		b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+		b2Fixture = Box2D.Dynamics.b2Fixture
+		b2World = Box2D.Dynamics.b2World
+		b2MassData = Box2D.Collision.Shapes.b2MassData
+		b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+		b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+		b2EdgeShape = Box2D.Collision.Shapes.b2EdgeShape
+		b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+		b2MouseJointDef =  Box2D.Dynamics.Joints.b2MouseJointDef
+
+		# attach Box2D definitions to us for children classes to access
+		@b2Vec2 = b2Vec2
+		@b2AABB = b2AABB
+		@b2BodyDef = b2BodyDef
+		@b2Body = b2Body
+		@b2FixtureDef = b2FixtureDef
+		@b2Fixture = b2Fixture
+		@b2World = b2World
+		@b2MassData = b2MassData
+		@b2PolygonShape = b2PolygonShape
+		@b2CircleShape = b2CircleShape
+		@b2EdgeShape = b2EdgeShape
+		@b2DebugDraw = b2DebugDraw
+		@b2MouseJointDef = b2MouseJointDef
 
 		constructor: (options) ->
 
