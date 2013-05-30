@@ -68,25 +68,23 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 			# kickstart the update process
 			@update()
 
-		# function to create a new contact listener
-		addContactListener: (callbacks) ->
-			listener = new Box2D.Dynamics.b2ContactListener
-
-			if callbacks.BeginContact then listener.BeginContact = (contact) ->
-				callbacks.BeginContact(contact)
-
-			if callbacks.EndContact then listener.EndContact = (contact) ->
-				callbacks.EndContact(contact)
-
-			if callbacks.PostSolve then listener.PostSolve = (contact, impulse) ->
-				callbacks.PostSolve(contact, impulse)
-
-			game.world.SetContactListener(listener)
-
 		preSetup: () ->
 			return 1
 
 		postSetup: () ->
+			return 1
+
+		# contact listener events, will be over-ridden by children classes
+		beginContact: (contact) ->
+			return 1
+
+		endContact: (contact) ->
+			return 1
+
+		preSolve: (contact) ->
+			return 1
+
+		postSolve: (contact, impulse) ->
 			return 1
 
 		customBodySettings: (body) ->
@@ -99,6 +97,7 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 			fixDef.friction = @friction
 			fixDef.restitution = @restitution
 			fixDef.shape = new b2PolygonShape
+			fixDef.userData = @id
 			fixDef.shape.SetAsBox((@width / 2) / DRAW_SCALE, (@height / 2) / DRAW_SCALE)
 			fixDef.filter.categoryBits = @options.categoryBits || 1
 			# create a new body definition

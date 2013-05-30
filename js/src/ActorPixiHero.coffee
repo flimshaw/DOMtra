@@ -65,7 +65,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 		resetKey: (key) ->
 			@pressedKeys[key] = false
 
-		setup: () ->
+		setup: () =>
 			@footContacts = 0
 			@jumping = false
 			@animateSpeed = 15
@@ -89,13 +89,16 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 			@setAnimation("jump")
 
+			game.addEventListener("BeginContact", @beginContact)
+			game.addEventListener("EndContact", @endContact)
+
 			@id = "hero"
 			# create a platform with some default settings
 			fixDef = new b2FixtureDef
 			fixDef.density = @density
 			fixDef.friction = @friction
 			fixDef.restitution = @restitution
-			
+			fixDef.userData = @id
 			fixDef.shape = new b2PolygonShape
 			fixDef.shape.SetAsBox((@width / 2) / DRAW_SCALE, (@height / 2) / DRAW_SCALE)
 
@@ -126,22 +129,14 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 			@hitCount = 0
 
-			@contactListener =
-				BeginContact: (contact) =>
-					if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
-						@footContacts++
-				EndContact: (contact) =>
-					if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
-						@footContacts--
-				PreSolve: () ->
-					return 1
-				PostSolve: (contact, impulse) ->
-					return 1
-
-			@addContactListener(@contactListener)
-
-		hit: (actor) ->
-			#console.log(actor)
+		
+		beginContact: (contact) =>
+			if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
+				@footContacts++
+				
+		endContact: (contact) =>
+			if contact.m_fixtureA.GetUserData() == "heroFootSensor" || contact.m_fixtureB.GetUserData() == "heroFootSensor"
+				@footContacts--
 
 		setAnimation: (animation) ->
 			@currentAnimation = @animations[animation]

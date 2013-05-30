@@ -48,18 +48,12 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 
 			@options = options || {}
 
+			# array to hold references to all the actors that want to hear about contact events
+			@contactListeners = []
+
 			# create a global for this game
 			window.game = @;
-			# get our console div
-			#@el = document.createElement("div")
-			#@el.setAttribute("id", "console")
-			#@el.style.position = "absolute"
-			#@el.style.left = 50
-			#@el.style.top = 50
-			#@el.style.width = 200
-			#@el.style.height = 200
-			#@el.style.opacity = .75
-			#@el.style.color = "white"
+
 
 			# append our element to the document body
 			#document.body.appendChild(@el)
@@ -80,9 +74,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 
 			# start a box2d world
 			@world = new b2World(new b2Vec2(0, 30), true)
-
-
-
+			@startContactListener()
 			super
 
 		loadLevel: (level) ->
@@ -91,6 +83,24 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 		createBody: (bodyDef, fixDef) ->
 			body = @world.CreateBody(bodyDef).CreateFixture(fixDef).GetBody()
 			return body
+
+		# function to create a new contact listener
+		startContactListener: () ->
+			listener = new Box2D.Dynamics.b2ContactListener
+
+			listener.BeginContact = (contact) ->
+				game.dispatch("BeginContact", contact)
+
+			listener.EndContact = (contact) ->
+				game.dispatch("EndContact", contact)
+
+			listener.PostSolve = (contact, impulse) ->
+				game.dispatch("PostSolve", { contact: contact, impulse: impulse })
+
+			listener.PreSolve = (contact) ->
+				game.dispatch("PreSolve", contact)
+
+			@world.SetContactListener(listener)
 
 		removeBody: (body) ->
 			@world.DestroyBody(body)
@@ -101,9 +111,6 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 		start: () ->
 			requestAnimFrame @update
 			@dispatch("gameStarted")
-
-		log: (message) ->
-			#@el.innerHTML += "<br />" +  message
 
 		update: () =>
 			requestAnimFrame @update
