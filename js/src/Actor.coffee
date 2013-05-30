@@ -119,6 +119,8 @@ define ['vendor/Box2dWeb-2.1.a.3'], (Box2D) ->
 			# instantiate our body element, and add it to the world
 			@body = game.createBody(bodyDef, fixDef)
 
+			# TODO: implement system that allows for asynchronous body creation and assignment
+
 			@hitCount = 0
 
 		remove: () ->

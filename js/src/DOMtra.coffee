@@ -49,7 +49,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			@options = options || {}
 
 			# array to hold references to all the actors that want to hear about contact events
-			@contactListeners = []
+			@bodyQueue = []
 
 			# create a global for this game
 			window.game = @;
@@ -77,12 +77,19 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			@startContactListener()
 			super
 
+		queueCreateBody: (bodyDef, fixDef) =>
+			@bodyQueue.push({ bodyDef: bodyDef, fixDef: fixDef });
+
 		loadLevel: (level) ->
 			@currentLevel = level
 
-		createBody: (bodyDef, fixDef) ->
-			body = @world.CreateBody(bodyDef).CreateFixture(fixDef).GetBody()
-			return body
+		createBody: (newBodyDef, newFixDef) =>
+			body = @world.CreateBody(newBodyDef)
+			if body == null
+				@bodyQueue.push({ bodyDef: bodyDef, fixDef: fixDef })
+			else
+				body.CreateFixture(newFixDef)
+				return body
 
 		# function to create a new contact listener
 		startContactListener: () ->
@@ -114,6 +121,10 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 
 		update: () =>
 			requestAnimFrame @update
+			if @bodyQueue.length > 0
+				newBody = @bodyQueue.pop()
+				@createBody(newBody.bodyDef, newBody.fixDef)
+				# callback to actor and assign body reference
 			if @currentLevel
 				@currentLevel.update()
 			@world.Step(1 / 60, 10, 10)

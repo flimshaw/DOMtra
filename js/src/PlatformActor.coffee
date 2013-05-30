@@ -5,17 +5,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'bin/ActorPixi', 'bin/ActorDOM'], (Box2D, Act
 		constructor: () ->
 			@lifeSpan = 0
 			@lifeCount = 0			
-			game.addEventListener("BeginContact", @beginContact)
 			super
-
-		beginContact: (contact) =>
-			if contact.m_fixtureA.GetUserData() == @id || contact.m_fixtureB.GetUserData() == @id
-				if contact.m_fixtureA.GetUserData() == "hero" || contact.m_fixtureB.GetUserData() == "hero"
-					@die()
-				else
-					@el.alpha -= .1
-					if @el.alpha <= 0
-						@die()
 
 		preSetup: () ->
 			@className = 'platform'

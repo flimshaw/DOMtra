@@ -71,7 +71,6 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			@animateSpeed = 15
 			@frameCount = 0
 			@animationCounter = 0
-
 			@pressedKeys = []
 
 			@walkSpeed = 10

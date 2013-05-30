@@ -33,7 +33,7 @@ define [
 			return guid
 
 		# attempt to create an actor from the json packet, return a reference to the actor we created
-		spawnActor: (actor, options) ->
+		spawnActor: (actor, options) =>
 			if typeof actor == "string"
 				a = @actorFactory(actor, options)
 				@actors.push a
