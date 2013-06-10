@@ -54,7 +54,6 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			# create a global for this game
 			window.game = @;
 
-
 			# append our element to the document body
 			#document.body.appendChild(@el)
 			
