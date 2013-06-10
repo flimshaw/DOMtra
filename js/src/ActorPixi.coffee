@@ -22,12 +22,6 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/Actor'], (Box2D, PIXI
 		@body = false
 
 		preSetup: () ->
-			@dynamic = true
-			@rotation = false
-			@restitution = 0
-			@friction = 0
-			@density = 1
-
 			defaultAnimations =
 				default:
 					frames: ["question_box_0.png", "question_box_1.png"]
@@ -87,10 +81,11 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/Actor'], (Box2D, PIXI
 
 		update: () ->
 			if @body.IsAwake() && @elReady == true
-				@x = @el.position.x = (@body.GetPosition().x * DRAW_SCALE)
-				@y = @el.position.y = (@body.GetPosition().y * DRAW_SCALE)
-				if @rotation
-					@el.rotation = @body.GetAngle()
+				@x = (@body.GetPosition().x * DRAW_SCALE)
+				@y = (@body.GetPosition().y * DRAW_SCALE)
+			@el.rotation = @body.GetAngle()
+			@el.position.x = @x + game.offset.x
+			@el.position.y = @y + game.offset.y
 			@animate()
 			super()
 

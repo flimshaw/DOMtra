@@ -36,10 +36,10 @@ define [
 		spawnActor: (actor, options) =>
 			if typeof actor == "string"
 				a = @actorFactory(actor, options)
-				@actors.push a
 			else
-				@actors.push new actor(@generateUID(), options)
-			return actor
+				a = new actor(@generateUID(), options)
+			@actors.push a
+			return a
 
 		getActorByUID: (uid) ->
 			a = _.find @actors, (actor) ->

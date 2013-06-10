@@ -61,6 +61,9 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			# start a new PIXI stage
 			@stage = new PIXI.Stage()
 			@currentLevel = false
+			@offset =
+				x: 0
+				y: 0
 
 			# start a renderer
 			@renderer = PIXI.autoDetectRenderer(window.innerWidth, window.innerHeight, null, true)
@@ -127,7 +130,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 				# callback to actor and assign body reference
 			if @currentLevel
 				@currentLevel.update()
-			@world.Step(1 / 60, 10, 10)
+			@world.Step(1 / 60, 1, 1)
 			@renderer.render(@stage)
 
 	return DOMtra
