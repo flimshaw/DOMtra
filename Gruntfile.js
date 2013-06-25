@@ -56,9 +56,8 @@ module.exports = function(grunt) {
       compile: {
         options: {
           optimize: "none",
-          baseUrl: "js",
-          mainConfigFile: "js/config.js",
-          out: "js/vendor/DOMtra.js",
+          mainConfigFile: "config.js",
+          out: "vendor/DOMtra.js",
           paths: {
             'DOMtra': 'bin/DOMtra'
           },
@@ -105,7 +104,7 @@ module.exports = function(grunt) {
         tasks: ['jshint:lib_test', 'qunit']
       },
       js: {
-        files: ['js/src/*.coffee', 'js/levels/*.coffee'],
+        files: ['src/*.coffee', 'levels/*.coffee'],
         tasks: ['coffee']
       }
     },
@@ -113,17 +112,17 @@ module.exports = function(grunt) {
       glob_to_multiple: {
         expand: true,
         flatten: true,
-        cwd: 'js/src',
+        cwd: 'src',
         src: ['*.coffee'],
-        dest: 'js/bin',
+        dest: 'bin',
         ext: '.js'
       },
       level_compiler: {
         expand: true,
         flatten: true,
-        cwd: 'js/levels',
+        cwd: 'levels',
         src: ['*.coffee'],
-        dest: 'js/bin',
+        dest: 'bin',
         ext: '.js'
       }
     },

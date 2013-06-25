@@ -1,0 +1,40 @@
+{
+	"world": {
+		"gravity": {
+			"x": 0,
+			"y": 30
+		}
+	},
+	"spriteSheet": "images/spriteSheet.json",
+	"actors": [
+		{
+			"type": "PlatformActor",
+			"options": {
+				"x": 100,
+				"y": 100
+			}
+		},
+		{
+			"type": "PlatformActor",
+			"options": {
+				"x": 200,
+				"y": 200
+			}
+		},
+		{
+			"type": "PlatformActor",
+			"options": {
+				"x": 300,
+				"y": 300
+			}
+		},
+		{
+			"type": "PlatformActor",
+			"options": {
+				"x": 400,
+				"y": 400
+			}
+		}
+
+	]
+}

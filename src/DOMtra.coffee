@@ -129,7 +129,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 				# callback to actor and assign body reference
 			if @currentLevel
 				@currentLevel.update()
-			@world.Step(1 / 60, 1, 1)
+			@world.Step(1 / 60, 8, 3)
 			@renderer.render(@stage)
 
 	return DOMtra
