@@ -1,6 +1,6 @@
 node_modules/*
 css/*.css
-js/vendor/DOMtra.js
-js/bin/*
+vendor/DOMtra.js
+bin/*
 build/*
 dist/*
