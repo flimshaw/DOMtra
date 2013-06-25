@@ -1,5 +1,5 @@
 require.config({
-	baseUrl: "./",
+	baseUrl: "/javascripts/vendor/DOMtra",
 	shim: {
 		"./vendor/jquery-1.9.1.min": {
 			exports: '$'
@@ -22,7 +22,7 @@ require.config({
 	}
 });
 
-require(
+define(
 	[
 		'DOMtra'
 	],
