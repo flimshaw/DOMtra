@@ -1,18 +1,19 @@
 require.config({
+	baseUrl: "./",
 	shim: {
-		"vendor/jquery-1.9.1.min": {
+		"./vendor/jquery-1.9.1.min": {
 			exports: '$'
 		},
-		"vendor/underscore": {
+		"./vendor/underscore": {
 			exports: '_'
 		},
-		"vendor/Box2dWeb-2.1.a.3": {
+		"./vendor/Box2dWeb-2.1.a.3": {
 			exports: "Box2D"
 		},
-		"vendor/pixi.dev": {
+		"./vendor/pixi.dev": {
 			exports: "PIXI"
 		},
-		"vendor/zepto.min": {
+		"./vendor/zepto.min": {
 			exports: "$"
 		}
 	},
