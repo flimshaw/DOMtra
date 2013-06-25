@@ -35,11 +35,11 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/Actor'], (Box2D, PIXI
 			@el.position.y = @y
 			@el.anchor.x = .5
 			@el.anchor.y = .5
-			@el.width = @width
-			@el.height = @height
 			@el.scale.x = 1
 			@el.scale.y = 1
 			game.stage.addChild(@el)
+			@el.width = @width
+			@el.height = @height
 			@elReady = true
 
 		setup: () =>

@@ -122,7 +122,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 			footDef = new b2FixtureDef
 			footDef.isSensor = true
 			footDef.shape = new b2PolygonShape
-			footDef.shape.SetAsOrientedBox((@width / 4) / DRAW_SCALE, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
+			footDef.shape.SetAsOrientedBox((@width / 3) / DRAW_SCALE, .3, new b2Vec2(0, (@height / 2) / DRAW_SCALE), 0)
 			footSensorFixture = @body.CreateFixture(footDef)
 			footSensorFixture.SetUserData("heroFootSensor")
 
