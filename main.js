@@ -23,24 +23,11 @@ require.config({
 
 require(
 	[
-		'vendor/jquery-1.9.1.min',
-		'DOMtra',
-		'bin/LevelBoxes',
-		'bin/LevelFlimshaw'
+		'DOMtra'
 	],
-	function($, DOMtra, LevelBoxes, LevelFlimshaw) {
+	function(DOMtra) {
 
-		$(document).ready(function() {
-
-			// create a new DOMtra instance
-			window.DOMtra = new DOMtra();
-
-			window.DOMtra.loadLevel(new LevelFlimshaw());
-
-			window.DOMtra.start();
-
-		});
-
+		return DOMtra;
 
 	}
 );
