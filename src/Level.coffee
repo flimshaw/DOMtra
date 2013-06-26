@@ -6,7 +6,6 @@ define ['bin/ActorManager'], (ActorManager) ->
 
 			@ready = false
 			@alive = true
-
 			$.getJSON(jsonFile, @setup)
 
 		setup: (data) =>

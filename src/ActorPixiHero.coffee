@@ -77,13 +77,13 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/World', 'bin/ActorPix
 
 			@animations = 
 				walk:
-					frames: ["hero_walk2.png", "hero_walk3.png", "hero_walk2.png", "hero_walk1.png" ],
+					frames: ["hero_standing.png"],
 					speed: 12
 				stand:
-					frames: ["hero_stand.png"]
+					frames: ["hero_standing.png"]
 					speed: 50
 				jump:
-					frames: ["hero_jump.png"]
+					frames: ["hero_standing.png"]
 					speed: 15
 
 			@setAnimation("jump")

@@ -1,4 +1,4 @@
-define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'vendor/requestAnimationFrame', 'bin/Level', 'bin/ActorPixi'], (EventDispatcher, Box2D, ActorManager, requestAnimFrame, Level, ActorPixi) ->
+define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorManager', 'vendor/requestAnimationFrame', 'bin/Level', 'bin/ActorPixi', 'bin/ActorPixiHero'], (EventDispatcher, Box2D, ActorManager, requestAnimFrame, Level, ActorPixi, ActorPixiHero) ->
 
 	class DOMtra extends EventDispatcher
 
@@ -11,6 +11,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 		@EventDispatcher = EventDispatcher
 		@ActorManager = ActorManager
 		@ActorPixi = ActorPixi
+		@ActorPixiHero = ActorPixiHero
 		@Level = Level
 		@Box2D = Box2D
 
@@ -59,7 +60,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			
 			# start a new PIXI stage
 			@stage = new PIXI.Stage()
-			@currentLevel = false
+			@currentLevel = new Level()
 			@offset =
 				x: 0
 				y: 0

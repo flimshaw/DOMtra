@@ -24,7 +24,7 @@ define ['vendor/Box2dWeb-2.1.a.3', 'vendor/pixi.dev', 'bin/Actor'], (Box2D, PIXI
 		preSetup: () ->
 			defaultAnimations =
 				default:
-					frames: ["question_box_0.png", "question_box_1.png"]
+					frames: ["hero_standing.png", "hero_standing.png"]
 					speed: 15
 			@animations = if @options.animations == undefined then defaultAnimations else @options.animations
 
