@@ -46,7 +46,11 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 		@b2MouseJointDef = b2MouseJointDef
 
 		constructor: (options) ->
+			# position on the world grid of our window
+			@x = 0
+			@y = 0
 
+			
 			@options = options || {}
 
 			# array to hold references to all the actors that want to hear about contact events
