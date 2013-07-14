@@ -49,6 +49,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 			# position on the world grid of our window
 			@x = 0
 			@y = 0
+			@ready = false
 
 			
 			@options = options || {}
@@ -125,6 +126,7 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 		start: () ->
 			requestAnimFrame @update
 			@dispatch("gameStarted")
+			@ready = true
 
 		update: () =>
 			requestAnimFrame @update
@@ -136,6 +138,9 @@ define 'DOMtra', ['bin/EventDispatcher', 'vendor/Box2dWeb-2.1.a.3', 'bin/ActorMa
 				@currentLevel.update()
 			@world.Step(1 / 60, 8, 3)
 			@renderer.render(@stage)
+
+		isConnected: () ->
+			return @socket.socket.connected
 
 	return DOMtra
 
